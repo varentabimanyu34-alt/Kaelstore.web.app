@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAELSTORE — White Infinity</title>
+<style>
+:root{--bg:#f4f8ff;--card:#fff;--ink:#15233d;--muted:#687995;--line:#dce7f7;--blue:#4d8dff;--cyan:#a8e6ff;--shadow:0 12px 35px #3764a51a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0,#e1f4ff 0,transparent 35%),linear-gradient(135deg,#f8fbff,#edf4ff);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:5;background:#ffffffdc;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px max(18px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:2px}.brand span{color:#5c9dff}.wrap{max-width:1100px;margin:auto;padding:24px 18px 80px}
+.hero{border-radius:26px;padding:32px;background:linear-gradient(120deg,#e8f6ff,#f7faff 55%,#d9eaff);border:1px solid #d8eaff;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.hero:after{content:"∞";position:absolute;right:28px;top:-35px;font-size:190px;color:#8fcaff25;font-weight:900}.eyebrow{color:#5689c9;font-size:12px;font-weight:800;letter-spacing:2px}.hero h1{font-size:clamp(30px,6vw,52px);margin:9px 0}.hero p{color:var(--muted);max-width:620px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:18px;box-shadow:var(--shadow)}.card h3{margin:0 0 9px}.muted{color:var(--muted)}.price{font-size:22px;font-weight:900;margin:12px 0}.btn{border:0;border-radius:12px;background:linear-gradient(120deg,#4e8eff,#72caff);color:white;padding:11px 16px;font-weight:800;cursor:pointer}.btn.secondary{background:#edf4ff;color:#315b98;border:1px solid #d9e6fb}.btn.danger{background:#fff0f0;color:#b43e4b;border:1px solid #ffd4d4}.btn:disabled{opacity:.5;cursor:not-allowed}input,textarea,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fbfdff;color:var(--ink);font:inherit;margin:6px 0 12px}textarea{min-height:75px;resize:vertical}label{font-size:13px;font-weight:750;color:#536783}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.section{margin-top:28px}.hidden{display:none!important}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.pill{border-radius:30px;background:#edf4ff;color:#43638d;padding:7px 11px;font-size:12px;font-weight:800}.status{font-size:12px;font-weight:850;padding:6px 10px;border-radius:20px;background:#fff4d9;color:#8c6500}.status.ACCEPTED{background:#e5f8ee;color:#237b4a}.status.REJECTED{background:#fff0f0;color:#b43e4b}.status.PENDING{background:#fff4d9;color:#8c6500}.notice{padding:12px 14px;background:#eff7ff;border:1px solid #d6eaff;border-radius:13px;color:#49688e;font-size:13px;line-height:1.5}.auth{max-width:460px;margin:38px auto}.footer{text-align:center;color:#8a9ab1;font-size:12px;margin:36px 0}.small{font-size:12px}.banner{max-width:100%;max-height:280px;object-fit:cover;border-radius:16px;margin-top:12px}.order{border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0}.divider{height:1px;background:var(--line);margin:14px 0}
+</style>
+</head>
+<body>
+<header><div class="brand">KAEL<span>STORE</span></div><div class="row"><span id="live" class="pill">● Menghubungkan…</span><button id="logout" class="btn secondary hidden">Keluar</button></div></header>
+<main class="wrap">
+<section id="authView" class="auth card">
+<div class="eyebrow">WHITE INFINITY STORE</div><h2 id="authTitle">Masuk ke KAELSTORE</h2><p class="muted">Masuk sekali, sesi akan tersimpan di browser/perangkat ini.</p>
+<label>Email</label><input id="email" type="email" placeholder="email@contoh.com" autocomplete="email">
+<label>Password</label><input id="password" type="password" placeholder="Minimal 6 karakter" autocomplete="current-password">
+<div class="row"><button class="btn" id="loginBtn">Masuk</button><button class="btn secondary" id="registerBtn">Daftar gratis</button></div>
+<p id="authMsg" class="small muted"></p>
+<div class="notice">Akun developer juga dibuat melalui tombol Daftar. Setelah itu UID akun developer perlu dimasukkan ke koleksi <b>admins</b> di Firebase Console agar mendapat akses dashboard.</div>
+</section>
+<section id="appView" class="hidden">
+<div class="hero"><div class="eyebrow">WELCOME TO</div><h1>KAELSTORE</h1><p id="welcomeText">A calm, secure and seamless digital store. Perubahan toko akan tampil otomatis secara live.</p><div id="bannerArea"></div></div>
+<div class="between section"><div><h2 style="margin:0">Produk</h2><div class="muted small">Katalog diperbarui langsung dari developer.</div></div><span class="pill">LIVE SYNC</span></div>
+<div id="products" class="grid"></div>
+<section class="section"><h2>Pesanan saya</h2><div id="myOrders" class="muted">Memuat pesanan…</div></section>
+<section id="adminPanel" class="section hidden">
+<div class="between"><div><h2 style="margin:0">Developer Dashboard</h2><div class="muted small">Perubahan tersinkron ke pembeli secara realtime.</div></div><span class="pill">ADMIN</span></div>
+<div class="grid">
+<div class="card"><h3>Tambah produk</h3><label>Nama produk</label><input id="pName" placeholder="Nama produk"><label>Harga (angka)</label><input id="pPrice" type="number" min="0" placeholder="15000"><label>Deskripsi</label><textarea id="pDesc" placeholder="Deskripsi produk"></textarea><button class="btn" id="addProduct">Terbitkan produk</button></div>
+<div class="card"><h3>Pengaturan toko</h3><label>Pesan utama</label><textarea id="siteMessage"></textarea><label>Link banner (gambar/video URL)</label><input id="bannerUrl" placeholder="https://..."><button class="btn" id="saveSettings">Simpan & tayangkan live</button><p class="small muted">Gunakan link media publik langsung. File upload belum diaktifkan karena Storage meminta upgrade.</p></div>
+</div>
+<div class="section"><h3>Semua transaksi</h3><div id="allOrders" class="muted">Memuat transaksi…</div></div>
+</section>
+</section>
+<div class="footer">KAELSTORE · White Infinity · Realtime powered by Firebase</div>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, onSnapshot, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyC1lAWA8yoKDlaND9bSi8B6aK2jFqT6sLg",authDomain:"kaelstoreweb.firebaseapp.com",projectId:"kaelstoreweb",storageBucket:"kaelstoreweb.firebasestorage.app",messagingSenderId:"521914396328",appId:"1:521914396328:web:e0d30b47d0fb0c7b8c5c9d",measurementId:"G-FG8QWS898X"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+await setPersistence(auth,browserLocalPersistence);
+const $=id=>document.getElementById(id);
+let currentUser=null,isAdmin=false,unsubs=[];
+const msg=(s)=>{$("authMsg").textContent=s};
+function clearSubs(){unsubs.forEach(fn=>fn());unsubs=[]}
+function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function money(n){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0)}
+$("loginBtn").onclick=async()=>{try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);msg("")}catch(e){msg(e.message)}};
+$("registerBtn").onclick=async()=>{try{const c=await createUserWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);await setDoc(doc(db,"users",c.user.uid),{email:c.user.email,createdAt:serverTimestamp()});msg("Akun berhasil dibuat.")}catch(e){msg(e.message)}};
+$("logout").onclick=()=>signOut(auth);
+onAuthStateChanged(auth,async user=>{
+ clearSubs();currentUser=user;
+ $("authView").classList.toggle("hidden",!!user);$("appView").classList.toggle("hidden",!user);$("logout").classList.toggle("hidden",!user);
+ if(!user){$("live").textContent="● Offline";return}
+ try{const {getDoc}=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");const a=await getDoc(doc(db,"admins",user.uid));isAdmin=a.exists();$("adminPanel").classList.toggle("hidden",!isAdmin);$("live").textContent="● LIVE";$("live").style.color="#237b4a";startListeners()}catch(e){$("live").textContent="● Firebase rules perlu dicek";console.error(e)}
+});
+function startListeners(){
+ unsubs.push(onSnapshot(collection(db,"products"),snap=>{const items=snap.docs.map(d=>({id:d.id,...d.data()}));$("products").innerHTML=items.length?items.map(p=>`<article class="card"><div class="eyebrow">KAELSTORE ITEM</div><h3>${safe(p.name)}</h3><div class="muted">${safe(p.description||"")}</div><div class="price">${money(p.price)}</div><button class="btn" data-buy="${safe(p.id)}">Pesan sekarang</button>${isAdmin?` <button class="btn danger" data-del="${safe(p.id)}">Hapus</button>`:""}</article>`).join(""):'<div class="card muted">Belum ada produk. Developer bisa menambahkan produk dari dashboard.</div>'},{error:e=>console.error(e)}));
+ unsubs.push(onSnapshot(doc(db,"siteSettings","main"),snap=>{if(snap.exists()){const s=snap.data();$("welcomeText").textContent=s.message||"A calm, secure and seamless digital store.";const b=s.bannerUrl||"";$("bannerArea").innerHTML=b?`<img class="banner" src="${safe(b)}" alt="Banner KAELSTORE" onerror="this.style.display='none'">`:"";if(isAdmin){$("siteMessage").value=s.message||"";$("bannerUrl").value=b}}}));
+ const mine=query(collection(db,"orders"),where("customerUid","==",currentUser.uid));
+ unsubs.push(onSnapshot(mine,snap=>{$("myOrders").innerHTML=snap.empty?'<div class="muted">Belum ada pesanan.</div>':snap.docs.map(d=>orderCard(d.id,d.data(),false)).join("")}));
+ if(isAdmin)unsubs.push(onSnapshot(collection(db,"orders"),snap=>{$("allOrders").innerHTML=snap.empty?'<div class="muted">Belum ada transaksi.</div>':snap.docs.map(d=>orderCard(d.id,d.data(),true)).join("")}));
+}
+function orderCard(id,o,admin){return `<div class="order"><div class="between"><b>${safe(o.productName||"Pesanan")}</b><span class="status ${safe(o.status)}">${safe(o.status||"PENDING")}</span></div><div class="muted small">ID: ${safe(id)} · ${money(o.price)} · ${safe(o.customerEmail||"")}</div>${o.delivery?`<div class="notice" style="margin-top:10px"><b>Hasil pesanan:</b><br>${safe(o.delivery)}</div>`:""}${admin&&o.status==="PENDING"?`<div class="divider"></div><label>Nomor HP / teks / detail hasil</label><textarea id="delivery-${safe(id)}" placeholder="Isi nomor atau pesan untuk pembeli"></textarea><div class="row"><button class="btn" data-accept="${safe(id)}">ACC & kirim</button><button class="btn danger" data-reject="${safe(id)}">Tolak</button></div>`:""}${admin?`<div class="small muted">UID pembeli: ${safe(o.customerUid||"")}</div>`:""}</div>`}
+$("products").addEventListener("click",async e=>{const b=e.target.closest("[data-buy]");if(b){const id=b.dataset.buy;const {getDoc}=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");const s=await getDoc(doc(db,"products",id));if(!s.exists())return alert("Produk sudah tidak tersedia.");const p=s.data();if(confirm(`Pesan ${p.name} seharga ${money(p.price)}?`)){await addDoc(collection(db,"orders"),{customerUid:currentUser.uid,customerEmail:currentUser.email,productId:id,productName:p.name,price:Number(p.price)||0,status:"PENDING",createdAt:serverTimestamp()});alert("Pesanan dikirim ke developer.")}}const del=e.target.closest("[data-del]");if(del&&isAdmin){if(confirm("Hapus produk ini?")){const {deleteDoc}=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");await deleteDoc(doc(db,"products",del.dataset.del))}}});
+$("addProduct").onclick=async()=>{const name=$("pName").value.trim(),price=Number($("pPrice").value);if(!name||!Number.isFinite(price)||price<0)return alert("Isi nama dan harga yang benar.");try{await addDoc(collection(db,"products"),{name,price,description:$("pDesc").value.trim(),createdAt:serverTimestamp()});$("pName").value=$("pPrice").value=$("pDesc").value="";alert("Produk tayang live.")}catch(e){alert(e.message)}};
+$("saveSettings").onclick=async()=>{try{await setDoc(doc(db,"siteSettings","main"),{message:$("siteMessage").value.trim(),bannerUrl:$("bannerUrl").value.trim(),updatedAt:serverTimestamp()},{merge:true});alert("Pengaturan tersimpan dan tersinkron live.")}catch(e){alert(e.message)}};
+$("allOrders").addEventListener("click",async e=>{const a=e.target.closest("[data-accept]"),r=e.target.closest("[data-reject]");if(a&&isAdmin){const delivery=$("delivery-"+a.dataset.accept).value.trim();if(!delivery)return alert("Isi dulu nomor HP atau hasil pesanan.");await updateDoc(doc(db,"orders",a.dataset.accept),{status:"ACCEPTED",delivery,processedAt:serverTimestamp()});alert("Pesanan di-ACC dan hasil dikirim.")}if(r&&isAdmin){if(confirm("Tolak transaksi ini?"))await updateDoc(doc(db,"orders",r.dataset.reject),{status:"REJECTED",processedAt:serverTimestamp()})}});
+</script>
+</body></html>
